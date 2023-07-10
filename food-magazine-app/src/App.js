@@ -1,4 +1,5 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, List, extendTheme } from "@chakra-ui/react";
+import { useState } from "react";
 import {
   Box,
   Container,
@@ -7,81 +8,142 @@ import {
   Grid,
   GridItem,
   Image,
+  Button,
+  Stack,
 } from "@chakra-ui/react";
+import DishesDetails from "./DishesDetails";
+// Extend Chakra UI theme to customize styles
+const theme = extendTheme({
+  colors: {
+    primary: "#34D399",
+  },
+});
 
 function App() {
-  const dishes = [
+  const [recipes, setRecipes] = useState([
     {
+      recipeName: "Chicken Adobo",
+      category: "Main Course",
+      ingredients: [
+        { name: "Chicken", measurement: "1 kg" },
+        { name: "Vinegar", measurement: "1/2 cup" },
+        { name: "Soy Sauce", measurement: "1/2 cup" },
+        { name: "Garlic", measurement: "5 cloves" },
+        { name: "Peppercorns", measurement: "1 teaspoon" },
+      ],
       image:
         "https://www.seriouseats.com/thmb/uc8nb040OwgXekR9obuhEqm8WoI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__serious_eats__seriouseats.com__2019__10__20191023-chicken-adobo-vicky-wasik-19-12ce105a2e1a44dfb1e2673775118064.jpg",
-      title: "Chicken Adobo",
-      description:
-        "Chicken Adobo is a popular Filipino dish marinated in vinegar, soy sauce, garlic, and spices. It's cooked until tender and flavorful.",
-      author: "John Doe",
-      publishedDate: "Published on July 1, 2023",
     },
     {
+      recipeName: "Sinigang",
+      category: "Soup",
+      ingredients: [
+        { name: "Pork", measurement: "500g" },
+        { name: "Tamarind", measurement: "2 cups" },
+        { name: "Tomatoes", measurement: "2 pieces" },
+        { name: "Vegetables", measurement: "Assorted" },
+      ],
       image: "https://assets.unileversolutions.com/recipes-v2/237863.png",
-      title: "Sinigang",
-      description:
-        "Sinigang is a sour soup made with tamarind, tomatoes, vegetables, and your choice of meat. It's a comforting and tangy dish.",
-      author: "Jane Smith",
-      publishedDate: "Published on June 28, 2023",
     },
     {
+      recipeName: "Lechon",
+      category: "Main Course",
+      ingredients: [
+        { name: "Pork", measurement: "5 kg" },
+        { name: "Salt", measurement: "1/2 cup" },
+        { name: "Pepper", measurement: "1/4 cup" },
+        { name: "Garlic", measurement: "1 bulb" },
+        { name: "Bay Leaves", measurement: "5 leaves" },
+      ],
       image:
         "https://milaslechon.com.ph/wp-content/uploads/2018/11/lechon_6.jpg",
-      title: "Lechon",
-      description:
-        "Lechon is a roasted whole pig dish that is often the centerpiece of celebrations in the Philippines. It has a crispy skin and succulent meat.",
-      author: "Mike Johnson",
-      publishedDate: "Published on June 20, 2023",
     },
     {
+      recipeName: "Halo-Halo",
+      category: "Dessert",
+      ingredients: [
+        { name: "Shaved Ice", measurement: "4 cups" },
+        { name: "Sweet Beans", measurement: "1/2 cup" },
+        { name: "Jellies", measurement: "Assorted" },
+        { name: "Fruits", measurement: "Assorted" },
+        { name: "Evaporated Milk", measurement: "1/2 cup" },
+        { name: "Leche Flan", measurement: "1 piece" },
+      ],
       image:
         "https://www.bhg.com/thmb/xP6vr6usB1_phcXnXE75YkUcH7g=/4000x0/filters:no_upscale():strip_icc()/BHG-Halo-Halo-Hero-6MKIKIe-ar386nzeJOHjW_-354671c880d441aba6a75e75e59b1066.jpg",
-      title: "Halo-Halo",
-      description:
-        "Halo-Halo is a popular Filipino dessert made with a mix of various ingredients, including shaved ice, sweet beans, jellies, fruits, and topped with evaporated milk and leche flan.",
-      author: "Anna Lee",
-      publishedDate: "Published on July 5, 2023",
     },
     {
+      recipeName: "Sisig",
+      category: "Appetizer",
+      ingredients: [
+        { name: "Pig's Head", measurement: "1 kg" },
+        { name: "Pig's Liver", measurement: "250g" },
+        { name: "Calamansi", measurement: "10 pieces" },
+        { name: "Onions", measurement: "2 pieces" },
+        { name: "Chili Peppers", measurement: "5 pieces" },
+        { name: "Cooking Oil", measurement: "3 tablespoons" },
+      ],
       image:
         "https://images.deliveryhero.io/image/foodpanda/recipes/sisig-recipe-2.jpg",
-      title: "Sisig",
-      description:
-        "Sisig is a sizzling dish made from parts of a pig's head and liver. It's usually seasoned with calamansi, onions, and chili peppers, and is often served with rice.",
-      author: "Carlos Santos",
-      publishedDate: "Published on July 7, 2023",
     },
     {
+      recipeName: "Kare-Kare",
+      category: "Main Course",
+      ingredients: [
+        { name: "Oxtail", measurement: "1 kg" },
+        { name: "Tripe", measurement: "500g" },
+        { name: "Eggplant", measurement: "4 pieces" },
+        { name: "String Beans", measurement: "1/2 pound" },
+        { name: "Peanut Butter", measurement: "1 cup" },
+        { name: "Bagoong", measurement: "1/2 cup" },
+      ],
       image:
         "https://images.aws.nestle.recipes/resized/af78558684736b541f41416b652b5eed_MMS_K_0102_1900px_944_531.jpg",
-      title: "Kare-Kare",
-      description:
-        "Kare-Kare is a Filipino stew made with oxtail, tripe, and vegetables, cooked in a peanut-based sauce. It's commonly served with bagoong (fermented shrimp paste) on the side.",
-      author: "Liza Fernandez",
-      publishedDate: "Published on July 9, 2023",
     },
-  ];
+  ]);
+
+  const [showDetailsIndex, setShowDetailsIndex] = useState(-1);
+
+  const toggleDetails = (index) => {
+    setShowDetailsIndex(index === showDetailsIndex ? -1 : index);
+  };
+
+  const addRecipe = () => {
+    const newRecipe = {
+      recipeName: "New Recipe",
+      category: "Category",
+      ingredients: [
+        { name: "Ingredient 1", measurement: "1 cup" },
+        { name: "Ingredient 2", measurement: "2 tablespoons" },
+      ],
+      image: "https://example.com/image.jpg",
+    };
+
+    setRecipes([...recipes, newRecipe]);
+  };
+
+  const removeRecipe = (index) => {
+    const updatedRecipes = [...recipes];
+    updatedRecipes.splice(index, 1);
+    setRecipes(updatedRecipes);
+  };
+
+  const editRecipe = (index, updatedRecipe) => {
+    const updatedRecipes = [...recipes];
+    updatedRecipes[index] = updatedRecipe;
+    setRecipes(updatedRecipes);
+  };
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Box bg="gray.100" py={10}>
         <Container maxW="container.xl">
-          <Heading
-            as="h1"
-            size="xl"
-            textAlign="center"
-            mb={10}
-            color={"green.500"}
-          >
+          <Heading as="h1" size="xl" textAlign="center" mb={10} color="primary">
             Philippines Best Food!
           </Heading>
 
           <Grid templateColumns="repeat(3, 1fr)" gap={8}>
-            {dishes.map((article, index) => (
+            {recipes.map((recipe, index) => (
               <GridItem key={index}>
                 <Box
                   p={6}
@@ -92,24 +154,66 @@ function App() {
                   transition="all 0.3s ease"
                 >
                   <Image
-                    src={article.image}
-                    alt={article.title}
+                    src={recipe.image}
+                    alt={recipe.recipeName}
                     objectFit="cover"
                     h={64}
                     mb={4}
+                    borderRadius="md"
                   />
-                  <Heading as="h2" size="lg" mb={2}>
-                    {article.title}
-                  </Heading>
-                  <Text color="gray.500" mb={4}>
-                    {article.description}
-                  </Text>
-                  <Text fontWeight="bold">By {article.author}</Text>
-                  <Text color="gray.500">{article.publishedDate}</Text>
+                  <List spacing={2}>
+                    <Heading as="h2" size="lg" mb={2}>
+                      {recipe.recipeName}
+                    </Heading>
+                    <Text color="gray.500" fontSize="sm">
+                      Category: {recipe.category}
+                    </Text>
+                    <Heading as="h3" size="md" mb={2} mt={4}>
+                      Ingredients:
+                    </Heading>
+                    <List ml={6}>
+                      <ul>
+                        {recipe.ingredients.map((ingredient, idx) => (
+                          <li key={idx}>
+                            {ingredient.name} - {ingredient.measurement}
+                          </li>
+                        ))}
+                      </ul>
+                    </List>
+                  </List>
+
+                  {/* Edit and Remove Buttons */}
+                  <Stack direction="row" spacing={2} mt={4}>
+                    <Button
+                      colorScheme="blue"
+                      size="sm"
+                      onClick={() => toggleDetails(index)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() => removeRecipe(index)}
+                    >
+                      Remove
+                    </Button>
+                  </Stack>
+                  {showDetailsIndex === index && (
+                    <DishesDetails
+                      recipe={recipe}
+                      onEdit={(editedRecipe) => editRecipe(index, editedRecipe)}
+                    />
+                  )}
                 </Box>
               </GridItem>
             ))}
           </Grid>
+
+          {/* Add Recipe Button */}
+          <Button colorScheme="green" mt={6} onClick={addRecipe}>
+            Add Recipe
+          </Button>
         </Container>
       </Box>
     </ChakraProvider>
