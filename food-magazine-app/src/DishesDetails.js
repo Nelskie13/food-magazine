@@ -10,12 +10,16 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-function DishDetails({ recipe, onEdit }) {
+function DishDetails({ recipe, onEdit, onExit }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRecipe, setEditedRecipe] = useState(recipe);
 
+  const handleExit = () => {
+    onExit(); // Call the onExit prop when the exit button is clicked
+  };
+
   const handleEdit = () => {
-    setIsEditing(true);
+    setIsEditing(!isEditing); // Toggle the isEditing state
   };
 
   const handleSave = () => {
@@ -57,13 +61,14 @@ function DishDetails({ recipe, onEdit }) {
             value={editedRecipe.recipeName}
             onChange={handleInputChange}
             autoFocus
+            placeholder="Recipe Name"
           />
         ) : (
           recipe.recipeName
         )}
       </Heading>
       <Text color="gray.500" mb={4}>
-        Category:{" "}
+        Category: {""}
         {isEditing ? (
           <Input
             name="category"
@@ -85,12 +90,14 @@ function DishDetails({ recipe, onEdit }) {
                 name="name"
                 value={ingredient.name}
                 onChange={(e) => handleIngredientChange(e, index)}
-              />{" "}
-              -{" "}
+                placeholder={`Ingredient ${index + 1} Name`}
+              />
+              -
               <Input
                 name="measurement"
                 value={ingredient.measurement}
                 onChange={(e) => handleIngredientChange(e, index)}
+                placeholder={`Ingredient ${index + 1} Measurement`}
               />
               <p>----------------------------------------------</p>
             </ListItem>
@@ -116,9 +123,14 @@ function DishDetails({ recipe, onEdit }) {
           </Button>
         </Stack>
       ) : (
-        <Button colorScheme="blue" size="sm" mt={4} onClick={handleEdit}>
-          Edit
-        </Button>
+        <Stack direction="row" spacing={2} mt={4}>
+          <Button colorScheme="blue" size="sm" onClick={handleEdit}>
+            Edit
+          </Button>
+          <Button colorScheme="gray" size="sm" onClick={handleExit}>
+            Exit
+          </Button>
+        </Stack>
       )}
     </Box>
   );

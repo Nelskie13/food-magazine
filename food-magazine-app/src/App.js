@@ -1,4 +1,13 @@
-import { ChakraProvider, List, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  List,
+  extendTheme,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+} from "@chakra-ui/react";
+
+import AddRecipe from "./AddRecipe";
 import { useState } from "react";
 import {
   Box,
@@ -103,23 +112,11 @@ function App() {
   ]);
 
   const [showDetailsIndex, setShowDetailsIndex] = useState(-1);
+  const [isEditing, setIsEditing] = useState(false);
 
   const toggleDetails = (index) => {
-    setShowDetailsIndex(index === showDetailsIndex ? -1 : index);
-  };
-
-  const addRecipe = () => {
-    const newRecipe = {
-      recipeName: "New Recipe",
-      category: "Category",
-      ingredients: [
-        { name: "Ingredient 1", measurement: "1 cup" },
-        { name: "Ingredient 2", measurement: "2 tablespoons" },
-      ],
-      image: "https://example.com/image.jpg",
-    };
-
-    setRecipes([...recipes, newRecipe]);
+    setShowDetailsIndex(index);
+    setIsEditing(index !== -1); // Set isEditing to true when a recipe is clicked, and false when -1 (no recipe is being edited)
   };
 
   const removeRecipe = (index) => {
@@ -134,6 +131,24 @@ function App() {
     setRecipes(updatedRecipes);
   };
 
+  const handleAddRecipe = (newRecipe) => {
+    setRecipes([...recipes, newRecipe]);
+  };
+
+  const initialRecipe = {
+    recipeName: "",
+    category: "",
+    ingredients: [
+      { name: "", measurement: "" },
+      { name: "", measurement: "" },
+      { name: "", measurement: "" },
+      { name: "", measurement: "" },
+      { name: "", measurement: "" },
+      { name: "", measurement: "" },
+    ],
+    image: "",
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Box bg="gray.100" py={10}>
@@ -142,6 +157,8 @@ function App() {
             Philippines Best Food!
           </Heading>
 
+          {/* Add Recipe Button */}
+          <AddRecipe onAdd={handleAddRecipe} initialRecipe={initialRecipe} />
           <Grid templateColumns="repeat(3, 1fr)" gap={8}>
             {recipes.map((recipe, index) => (
               <GridItem key={index}>
@@ -184,36 +201,63 @@ function App() {
 
                   {/* Edit and Remove Buttons */}
                   <Stack direction="row" spacing={2} mt={4}>
-                    <Button
-                      colorScheme="blue"
-                      size="sm"
-                      onClick={() => toggleDetails(index)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      colorScheme="red"
-                      size="sm"
-                      onClick={() => removeRecipe(index)}
-                    >
-                      Remove
-                    </Button>
+                    {isEditing && showDetailsIndex === index ? (
+                      <>
+                        <Button
+                          colorScheme="green"
+                          size="sm"
+                          onClick={() => editRecipe(index, recipe)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          size="sm"
+                          onClick={() => toggleDetails(index)}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          colorScheme="blue"
+                          size="sm"
+                          onClick={() => toggleDetails(index)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          size="sm"
+                          onClick={() => removeRecipe(index)}
+                        >
+                          Remove
+                        </Button>
+                      </>
+                    )}
                   </Stack>
                   {showDetailsIndex === index && (
-                    <DishesDetails
-                      recipe={recipe}
-                      onEdit={(editedRecipe) => editRecipe(index, editedRecipe)}
-                    />
+                    <Modal
+                      isOpen={showDetailsIndex !== -1}
+                      onClose={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the modal is closed
+                    >
+                      <ModalOverlay />
+                      <ModalContent>
+                        <DishesDetails
+                          recipe={recipe}
+                          onEdit={(editedRecipe) =>
+                            editRecipe(index, editedRecipe)
+                          }
+                          onExit={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the exit button is clicked
+                        />
+                      </ModalContent>
+                    </Modal>
                   )}
                 </Box>
               </GridItem>
             ))}
           </Grid>
-
-          {/* Add Recipe Button */}
-          <Button colorScheme="green" mt={6} onClick={addRecipe}>
-            Add Recipe
-          </Button>
         </Container>
       </Box>
     </ChakraProvider>
