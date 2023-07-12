@@ -8,6 +8,7 @@ import {
   ListItem,
   Button,
   Input,
+  Divider,
 } from "@chakra-ui/react";
 
 function DishDetails({ recipe, onEdit, onExit }) {
@@ -99,7 +100,7 @@ function DishDetails({ recipe, onEdit, onExit }) {
                 onChange={(e) => handleIngredientChange(e, index)}
                 placeholder={`Ingredient ${index + 1} Measurement`}
               />
-              <p>----------------------------------------------</p>
+              <Divider my={4} />
             </ListItem>
           ))}
         </List>
