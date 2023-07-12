@@ -176,7 +176,7 @@ function App() {
       <Box bg="gray.100" py={10}>
         <Container maxW="container.xl">
           <Heading as="h1" size="xl" textAlign="center" mb={10} color="primary">
-            Philippines Best Food!
+            The Flavorful Kitchen
           </Heading>
 
           {/* Add Recipe Button */}
