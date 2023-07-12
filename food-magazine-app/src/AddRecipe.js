@@ -14,6 +14,7 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  Divider,
 } from "@chakra-ui/react";
 
 function AddRecipe({ onAdd, initialRecipe }) {
@@ -77,6 +78,12 @@ function AddRecipe({ onAdd, initialRecipe }) {
     }
     if (!recipe.category) {
       newErrors.category = "Category is required";
+    }
+    if (ingredientValues.some((ingredient) => !ingredient.name.trim())) {
+      newErrors.ingredients = "Ingredient Name is required";
+    }
+    if (ingredientValues.some((ingredient) => !ingredient.measurement.trim())) {
+      newErrors.ingredients = "Ingredient Measurement is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -155,8 +162,12 @@ function AddRecipe({ onAdd, initialRecipe }) {
               </FormControl>
 
               {ingredientValues.map((ingredient, index) => (
-                <Box key={index}>
-                  <FormControl id={`ingredientName${index}`} isRequired>
+                <Box key={index} isRequired>
+                  <FormControl
+                    id={`ingredientName${index}`}
+                    isRequired
+                    isInvalid={!ingredient.name.trim()}
+                  >
                     <FormLabel>{`Ingredient ${index + 1} Name`}</FormLabel>
                     <Input
                       type="text"
@@ -166,11 +177,15 @@ function AddRecipe({ onAdd, initialRecipe }) {
                       placeholder={`Ingredient ${index + 1} Name`}
                     />
                     <FormErrorMessage>
-                      {ingredient.name ? "" : "Ingredient Name is required"}
+                      {ingredient.name === "" && "Ingredient Name is required"}
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl id={`ingredientMeasurement${index}`} isRequired>
+                  <FormControl
+                    id={`ingredientMeasurement${index}`}
+                    isRequired
+                    isInvalid={!ingredient.measurement.trim()}
+                  >
                     <FormLabel>{`Ingredient ${
                       index + 1
                     } Measurement`}</FormLabel>
@@ -181,6 +196,10 @@ function AddRecipe({ onAdd, initialRecipe }) {
                       onChange={(e) => handleIngredientChange(e, index)}
                       placeholder={`Ingredient ${index + 1} Measurement`}
                     />
+                    <FormErrorMessage>
+                      {ingredient.measurement === "" &&
+                        "Ingredient Measurement is required"}
+                    </FormErrorMessage>
                   </FormControl>
 
                   {index !== 0 && (
@@ -194,7 +213,7 @@ function AddRecipe({ onAdd, initialRecipe }) {
                     </Button>
                   )}
 
-                  <p>----------------------------------------------</p>
+                  <Divider my={4} />
                 </Box>
               ))}
 
