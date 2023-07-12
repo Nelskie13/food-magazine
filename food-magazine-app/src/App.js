@@ -1,8 +1,7 @@
 import {
   ChakraProvider,
   extendTheme,
-  Grid,
-  GridItem,
+  SimpleGrid,
   Heading,
   Input,
   List,
@@ -15,6 +14,8 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 
 import AddRecipe from "./AddRecipe";
@@ -204,105 +205,101 @@ function App() {
               No recipes found. Please add recipes.
             </Text>
           ) : (
-            <Grid templateColumns="repeat(3, 1fr)" gap={8}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
               {filteredRecipes.map((recipe, index) => (
-                <GridItem key={index}>
-                  <Box
-                    p={6}
-                    bg="white"
-                    boxShadow="lg"
-                    borderRadius="lg"
-                    _hover={{ boxShadow: "xl", transform: "scale(1.02)" }}
-                    transition="all 0.3s ease"
-                  >
-                    <Image
-                      src={recipe.image}
-                      alt={recipe.recipeName}
-                      objectFit="cover"
-                      h={64}
-                      mb={4}
-                      borderRadius="md"
-                    />
-                    <List spacing={2}>
-                      <Heading as="h2" size="lg" mb={2}>
-                        {recipe.recipeName}
-                      </Heading>
-                      <Text color="gray.500" fontSize="sm">
-                        Category: {recipe.category}
-                      </Text>
-                      <Heading as="h3" size="md" mb={2} mt={4}>
-                        Ingredients:
-                      </Heading>
-                      <List ml={6}>
-                        <ul>
-                          {recipe.ingredients.map((ingredient, idx) => (
-                            <li key={idx}>
-                              {ingredient.name} - {ingredient.measurement}
-                            </li>
-                          ))}
-                        </ul>
-                      </List>
-                    </List>
+                <Box
+                  p={6}
+                  bg="white"
+                  boxShadow="lg"
+                  borderRadius="lg"
+                  _hover={{ boxShadow: "xl", transform: "scale(1.02)" }}
+                  transition="all 0.3s ease"
+                >
+                  <Image
+                    src={recipe.image}
+                    alt={recipe.recipeName}
+                    objectFit="cover"
+                    h={64}
+                    mb={4}
+                    borderRadius="md"
+                  />
+                  <List spacing={2}>
+                    <Heading as="h2" size="lg" mb={2} fontWeight="bold">
+                      {recipe.recipeName}
+                    </Heading>
+                    <Text color="gray.500" fontSize="sm" fontWeight="semibold">
+                      Category: {recipe.category}
+                    </Text>
+                    <Heading as="h3" size="md" mb={2} mt={4}>
+                      Ingredients:
+                    </Heading>
+                    <UnorderedList ml={6}>
+                      {recipe.ingredients.map((ingredient, idx) => (
+                        <ListItem key={idx}>
+                          {ingredient.name} - {ingredient.measurement}
+                        </ListItem>
+                      ))}
+                    </UnorderedList>
+                  </List>
 
-                    {/* Edit and Remove Buttons */}
-                    <Stack direction="row" spacing={2} mt={4}>
-                      {isEditing && showDetailsIndex === index ? (
-                        <>
-                          <Button
-                            colorScheme="green"
-                            size="sm"
-                            onClick={() => editRecipe(index, recipe)}
-                          >
-                            Save
-                          </Button>
-                          <Button
-                            colorScheme="red"
-                            size="sm"
-                            onClick={() => toggleDetails(index)}
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            colorScheme="blue"
-                            size="sm"
-                            onClick={() => toggleDetails(index)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            colorScheme="red"
-                            size="sm"
-                            onClick={() => removeRecipe(index)}
-                          >
-                            Remove
-                          </Button>
-                        </>
-                      )}
-                    </Stack>
-                    {showDetailsIndex === index && (
-                      <Modal
-                        isOpen={showDetailsIndex !== -1}
-                        onClose={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the modal is closed
-                      >
-                        <ModalOverlay />
-                        <ModalContent>
-                          <DishesDetails
-                            recipe={recipe}
-                            onEdit={(editedRecipe) =>
-                              editRecipe(index, editedRecipe)
-                            }
-                            onExit={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the exit button is clicked
-                          />
-                        </ModalContent>
-                      </Modal>
+                  {/* Edit and Remove Buttons */}
+                  <Stack direction="row" spacing={2} mt={4}>
+                    {isEditing && showDetailsIndex === index ? (
+                      <>
+                        <Button
+                          colorScheme="green"
+                          size="sm"
+                          onClick={() => editRecipe(index, recipe)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          size="sm"
+                          onClick={() => toggleDetails(index)}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          colorScheme="blue"
+                          size="sm"
+                          onClick={() => toggleDetails(index)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          size="sm"
+                          onClick={() => removeRecipe(index)}
+                        >
+                          Remove
+                        </Button>
+                      </>
                     )}
-                  </Box>
-                </GridItem>
+                  </Stack>
+                  {showDetailsIndex === index && (
+                    <Modal
+                      isOpen={showDetailsIndex !== -1}
+                      onClose={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the modal is closed
+                    >
+                      <ModalOverlay />
+                      <ModalContent>
+                        <DishesDetails
+                          recipe={recipe}
+                          onEdit={(editedRecipe) =>
+                            editRecipe(index, editedRecipe)
+                          }
+                          onExit={() => toggleDetails(-1)} // Set showDetailsIndex to -1 when the exit button is clicked
+                        />
+                      </ModalContent>
+                    </Modal>
+                  )}
+                </Box>
               ))}
-            </Grid>
+            </SimpleGrid>
           )}
         </Container>
       </Box>
