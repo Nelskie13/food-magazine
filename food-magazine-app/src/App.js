@@ -1,7 +1,17 @@
 import {
   ChakraProvider,
-  List,
   extendTheme,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+  List,
+  Box,
+  Container,
+  Stack,
+  Text,
+  Image,
+  Button,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -9,17 +19,6 @@ import {
 
 import AddRecipe from "./AddRecipe";
 import { useState } from "react";
-import {
-  Box,
-  Container,
-  Heading,
-  Text,
-  Grid,
-  GridItem,
-  Image,
-  Button,
-  Stack,
-} from "@chakra-ui/react";
 import DishesDetails from "./DishesDetails";
 // Extend Chakra UI theme to customize styles
 const theme = extendTheme({
@@ -113,6 +112,8 @@ function App() {
 
   const [showDetailsIndex, setShowDetailsIndex] = useState(-1);
   const [isEditing, setIsEditing] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
   const toggleDetails = (index) => {
     setShowDetailsIndex(index);
@@ -149,6 +150,24 @@ function App() {
     image: "",
   };
 
+  const handleSearchChange = (event) => {
+    setSearchText(event.target.value);
+  };
+
+  const handleCategoryFilterChange = (event) => {
+    setCategoryFilter(event.target.value);
+  };
+
+  const filteredRecipes = recipes.filter((recipe) => {
+    const recipeNameMatch = recipe.recipeName
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+    const categoryMatch = recipe.category
+      .toLowerCase()
+      .includes(categoryFilter.toLowerCase());
+    return recipeNameMatch && categoryMatch;
+  });
+
   return (
     <ChakraProvider theme={theme}>
       <Box bg="gray.100" py={10}>
@@ -159,8 +178,22 @@ function App() {
 
           {/* Add Recipe Button */}
           <AddRecipe onAdd={handleAddRecipe} initialRecipe={initialRecipe} />
+
+          <Stack direction="row" spacing={4} mb={4}>
+            <Input
+              placeholder="Search recipes"
+              value={searchText}
+              onChange={handleSearchChange}
+            />
+            <Input
+              placeholder="Filter by category"
+              value={categoryFilter}
+              onChange={handleCategoryFilterChange}
+            />
+          </Stack>
+
           <Grid templateColumns="repeat(3, 1fr)" gap={8}>
-            {recipes.map((recipe, index) => (
+            {filteredRecipes.map((recipe, index) => (
               <GridItem key={index}>
                 <Box
                   p={6}
